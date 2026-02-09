@@ -1,5 +1,5 @@
 # 1️⃣ Base image: Java 17 slim
-FROM openjdk:17-jdk-slim
+FROM openjdk:17
 
 # 2️⃣ Set working directory inside container
 WORKDIR /app
