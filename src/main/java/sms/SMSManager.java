@@ -54,7 +54,13 @@ public class SMSManager {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(read(row));
 		} catch (Throwable t) {
-			return ResponseEntity.status(HttpStatus.OK).body(t.getMessage());
+			String m = "";
+			
+			for (StackTraceElement element : t.getStackTrace()) {
+				m += element.getMethodName() + "@" + element.getClassName() + System.lineSeparator(); 
+			}
+			
+			return ResponseEntity.status(HttpStatus.OK).body(m);
 		}
 	}
 }
