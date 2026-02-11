@@ -41,12 +41,9 @@ public class SMSManager {
 
 	private static final String DB_URL = "jdbc:postgresql://neondb_owner:npg_cTNuEg1CyK4b@ep-little-grass-ai1g4i8y-pooler.c-4.us-east-1.aws.neon.tech/neondb";
 
-	private void save(String name, String phone, String recommender) {
+	private void save(String name, String phone, String recommender) throws SQLException {
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			System.out.println("Connected to Render Postgres!");
-
-			String createTable = "CREATE TABLE IF NOT EXISTS subcribers (" + "id SERIAL PRIMARY KEY,"
-					+ "name TEXT NOT NULL" + "phone TEXT NOT NULL" + "recommender TEXT NOT NULL" + ")";
+			String createTable = "CREATE TABLE IF NOT EXISTS subcribers (id SERIAL PRIMARY KEY,name TEXT NOT NULL,phone TEXT NOT NULL,recommender TEXT NOT NULL)";
 
 			try (Statement stmt = conn.createStatement()) {
 				stmt.execute(createTable);
@@ -60,12 +57,10 @@ public class SMSManager {
 				ps.setString(3, recommender);
 				ps.executeUpdate();
 			}
-		} catch (SQLException e) {
-
 		}
 	}
 
-	private void read(int rowNumber) throws IOException, GeneralSecurityException {
+	private void read(int rowNumber) throws IOException, GeneralSecurityException, SQLException {
 		GoogleCredentials credentials;
 
 		try (ByteArrayInputStream stream = new ByteArrayInputStream(JSON_C.getBytes(StandardCharsets.UTF_8))) {
