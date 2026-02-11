@@ -53,8 +53,8 @@ public class SMSManager {
 	public ResponseEntity<Object> subscribe(@PathVariable int row)  {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(read(row));
-		} catch (IOException | GeneralSecurityException e) {
-			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
+		} catch (Throwable t) {
+			return ResponseEntity.status(HttpStatus.OK).body(t.getMessage());
 		}
 	}
 }
