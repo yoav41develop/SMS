@@ -1,7 +1,9 @@
 package sms;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
@@ -23,43 +25,53 @@ import com.google.auth.oauth2.GoogleCredentials;
 @RestController
 public class SMSManager {
 	private Object read(int rowNumber) throws IOException, GeneralSecurityException {
-        GoogleCredentials credentials = GoogleCredentials
-                .fromStream(new FileInputStream(System.getenv("LEADS_SHEET_CREDENTIALS_PATH")))
-                .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));
-        Sheets service = new Sheets.Builder(
-                GoogleNetHttpTransport.newTrustedTransport(),
-                GsonFactory.getDefaultInstance(),
-                new HttpCredentialsAdapter(credentials))
-                .setApplicationName("My App")
-                .build();
-        String spreadsheetId = System.getenv("LEADS_SHEET_ID");
-        String range = "data!" + rowNumber + ":" + rowNumber;
+		String jsonC = "{\"type\": \"service_account\", \"project_id\": \"api-project-721220914103\","
+				+ "\"private_key_id\": \"993a3500b02d4a66044e0bfcdda40dfe0b2877fe\","
+				+ "\"private_key\": \"-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCaLyR3GivKD8T4\ns8ttaSmXEqdSKN6OoZhC4z92CEy7q7yT2J6rFqm8p2/XlBC8aO/2mzmMd2ANwQF/\nDoDZBT08mYed8sFatV30ftSeUlnno2/hlAPeTqZdfI02Yp/vElfM/5AdJsDqyb7p\nTOqFZBxp4Py7wy3wh9wRcFXXzlFxSFyxWBwt44Il/AOJU3xYdWpQX2fJd0i9uvSl\nc7KT+Q4zEUYKT+N7e0/92yl3LwsQDWVgLWTV70RM9p9wE3FT8p53Lz0kJHL4MSRT\nE3t1XAylxa0Gx8WNLNzCUhGSgImJzjYawjhMPUK+2DBIVbhva/vLt/SyrPnYopy9\nCszlI71PAgMBAAECggEAAWhCaXHhihptvlAJyx8Fbv26bZC2Q1AB70OwDcLn9w3g\nuUAQvAKyHD4yUkyQKzVmp0tlvDyksaDG2OLdgIhAiv/jEdPS5EyOeyT4iioPQa18\ntRmK6tRbRrQp0nVrp0d1agdqcyb/kMUJoIsqrXqrRbjKJb6Tee62Lqnl/APD5jLy\nwS0NyXFNQW7ebaUmHg6IoaiE1ZiFiWLRkeWwDWsqie0yAP/4xt4hCmEU0UVJe3a8\n6mlf6e33Ct0Os0WIgwJ4TEZbplLLhMIkCBcZmD5s9aFbBttsqysiKgDSVQ7B3lgN\nScmsDHNIDiLtVf1NChDwMMfu+8/1uxk2Juj9itRjSQKBgQDIHeJbdWq8YdjZ+y+c\n3vs7QTvxhBQLkWpxhiSrcFEu2scQak3UzRQ1WDMfYUOQ3HeIlOmZVDb7wnE/7b24\nctR73z1Yc7LhzvjmJfo34Gzo+VfqliYCeluYPO4Q4gvInRwRizyX30f1eUxNuuE0\np4WW7tL5yLcEhvvB2E9onI1Y9wKBgQDFPZcmlHvlw4Nxzjte2f39ngSCIki4HNOi\nRaUSgaUuH7JzdIH5fnBGAvlXeDzl8ZVFp7ClgDPWWGe+hXHY40PzVxyCUfTPDUMI\nOU+b4fX4o2C13clEbLSX/SiDanGlj+5JuGkX/fi5KAYVX+N9j49DPo/p+ZsjTRyD\nG08ic9fAaQKBgQDGdvza/6QPmGrcJIWf6nT220d7yyWmI12RoRwU+ptJAKiT2xm9\nhnYYQZTR9kBwFnZl+mmCK0csgDaY1Etn9lpNT6UjZ/tsfzvR5LA3Ylgg5ckPWkHw\nCzFz1lm0XLqbB1WjAJfjdwmCpf3KySA4fDu86LZMC4eW8dgU81YtxbVZGQKBgQCb\nA0axiWy+LKQ3Yu+CIizdj7zXUX55RB6Hn9iV7NIWp86lsmEb5eTzAQ9ZUSP7S5wX\nPC02RMV4pc4TC+lnnWUf78x2F1chCrkt02zfg/y+RhiRlhbB8fUUpl+auKNMjQun\nYIkn0/AQBIaTceLmIVdkb9zG8+abHdVUrLfKyeQ8UQKBgGX/Ti/3rBY3kBvzlpOd\nmAghk6TsLeQ7CgZOSPOxCZ0DRYoqWfK2Sl90K9PWz3iN7qUeFLA3G9X+UgPSRvzj\nAfT//FnBSyqVwJ0G1cPVCCvhxLMAD8GOiWQfCGl2EDairXrJ9aJR1eMJVfGdxJlW\nEvADefYqv1o218t9YViei09w\n-----END PRIVATE KEY-----\n\","
+				+ "\"client_email\": \"sheets-access@api-project-721220914103.iam.gserviceaccount.com\","
+				+ "\"client_id\": \"105014468206403826082\","
+				+ "\"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\","
+				+ "\"token_uri\": \"https://oauth2.googleapis.com/token\","
+				+ "\"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\","
+				+ "\"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/sheets-access%40api-project-721220914103.iam.gserviceaccount.com\","
+				+ "\"universe_domain\": \"googleapis.com\"" + "}";
+		GoogleCredentials credentials;
 
-        ValueRange response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
-                .execute();
+		try (ByteArrayInputStream stream = new ByteArrayInputStream(jsonC.getBytes(StandardCharsets.UTF_8))) {
+			credentials = GoogleCredentials.fromStream(stream)
+					.createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));
+		}
+		
+		Sheets service = new Sheets.Builder(GoogleNetHttpTransport.newTrustedTransport(),
+				GsonFactory.getDefaultInstance(), new HttpCredentialsAdapter(credentials)).setApplicationName("My App")
+				.build();
 
-        List<List<Object>> values = response.getValues();
+		String range = "data!" + rowNumber + ":" + rowNumber;
 
-        if (values != null && !values.isEmpty()) {
-            List<Object> row = values.get(0);
-            return row.get(0);
-        }
-        
-        return "null";
+		ValueRange response = service.spreadsheets().values().get("1hRodth3lmVthJMEHkZ-PAYLyhux7Q8Z4mLO_DsX88RQ", range)
+				.execute();
+
+		List<List<Object>> values = response.getValues();
+
+		if (values != null && !values.isEmpty()) {
+			List<Object> row = values.get(0);
+			return row.get(0);
+		}
+
+		return "null";
 	}
-	
+
 	@GetMapping(value = "/subscribe/{row}")
-	public ResponseEntity<Object> subscribe(@PathVariable int row)  {
+	public ResponseEntity<Object> subscribe(@PathVariable int row) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(read(row));
 		} catch (Throwable t) {
 			String m = "";
-			
+
 			for (StackTraceElement element : t.getStackTrace()) {
-				m += element.getMethodName() + "@" + element.getClassName() + System.lineSeparator(); 
+				m += element.getMethodName() + "@" + element.getClassName() + System.lineSeparator();
 			}
-			
+
 			return ResponseEntity.status(HttpStatus.OK).body(m);
 		}
 	}
