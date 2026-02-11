@@ -54,7 +54,7 @@ public class SMSManager {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(read(row));
 		} catch (IOException | GeneralSecurityException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
 		}
 	}
 }
