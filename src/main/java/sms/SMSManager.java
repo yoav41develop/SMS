@@ -55,7 +55,13 @@ public class SMSManager {
 
 		if (values != null && !values.isEmpty()) {
 			List<Object> row = values.get(0);
-			return row.get(0);
+			String d = "";
+			
+			for (Object o : row) {
+				d += o + " ";
+			}
+			
+			return d;
 		}
 
 		return "null";
