@@ -39,7 +39,7 @@ public class SMSManager {
 			+ "\"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/sheets-access%40api-project-721220914103.iam.gserviceaccount.com\","
 			+ "\"universe_domain\": \"googleapis.com\"" + "}";
 
-	private static final String DB_URL = "jdbc:postgresql://subscribers:oy11S6RfbZ9CiLQETYHX7x1zCMssbUn7@dpg-d65fbel6ubrc7393euig-a.oregon-postgres.render.com/subscribers_zeuz";
+	private static final String DB_URL = "jdbc:postgresql://neondb_owner:npg_cTNuEg1CyK4b@ep-little-grass-ai1g4i8y-pooler.c-4.us-east-1.aws.neon.tech/neondb";
 
 	private void save(String name, String phone, String recommender) {
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
