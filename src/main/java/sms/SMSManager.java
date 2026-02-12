@@ -39,10 +39,10 @@ public class SMSManager {
 			+ "\"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/sheets-access%40api-project-721220914103.iam.gserviceaccount.com\","
 			+ "\"universe_domain\": \"googleapis.com\"" + "}";
 
-	private static final String DB_URL = "jdbc:postgresql://neondb_owner:npg_cTNuEg1CyK4b@ep-little-grass-ai1g4i8y-pooler.c-4.us-east-1.aws.neon.tech/neondb";
+	private static final String DB_URL = "jdbc:postgresql://ep-little-grass-ai1g4i8y-pooler.c-4.us-east-1.aws.neon.tech:5432/neondb?sslmode=require";
 
 	private void save(String name, String phone, String recommender) throws SQLException {
-		try (Connection conn = DriverManager.getConnection(DB_URL)) {
+		try (Connection conn = DriverManager.getConnection(DB_URL, "neondb_owner", "npg_cTNuEg1CyK4b")) {
 			String createTable = "CREATE TABLE IF NOT EXISTS subcribers (id SERIAL PRIMARY KEY,name TEXT NOT NULL,phone TEXT NOT NULL,recommender TEXT NOT NULL)";
 
 			try (Statement stmt = conn.createStatement()) {
