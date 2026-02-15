@@ -115,7 +115,7 @@ public class SMSManager {
 	public ResponseEntity<Collection<Lead>> read() throws SQLException {
 		try (Connection conn = DriverManager.getConnection(DB_URL, "neondb_owner", "npg_cTNuEg1CyK4b")) {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM subscribers");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM public.subscribers;");
 			Collection<Lead> leads = new ArrayList<Lead>();
 			
 			while (rs.next()) {

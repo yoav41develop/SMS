@@ -10,4 +10,16 @@ public class Lead {
 		this.phone = phone;
 		this.recommender = recommender;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public String getRecommender() {
+		return recommender;
+	}
 }
