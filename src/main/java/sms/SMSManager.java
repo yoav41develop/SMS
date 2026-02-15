@@ -7,7 +7,11 @@ import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -104,6 +108,22 @@ public class SMSManager {
 			}
 
 			return ResponseEntity.status(HttpStatus.OK).body(m);
+		}
+	}
+	
+	@GetMapping(value = "/read")
+	public ResponseEntity<Collection<Lead>> read() throws SQLException {
+		try (Connection conn = DriverManager.getConnection(DB_URL, "neondb_owner", "npg_cTNuEg1CyK4b")) {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM subscribers");
+			Collection<Lead> leads = new ArrayList<Lead>();
+			
+			while (rs.next()) {
+				Lead lead = new Lead(rs.getString("name"), rs.getString("phone"), rs.getString("recommender"));
+				leads.add(lead);
+			}
+			
+			return ResponseEntity.status(HttpStatus.OK).body(leads);
 		}
 	}
 }
